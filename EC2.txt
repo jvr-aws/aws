@@ -1,0 +1,157 @@
+EC2
+
+What is Virtualization?
+Virtualization is technology that you can use to create virtual representations of servers, storage, networks, and other physical machines. 
+
+ Virtualization removes all these limitations by abstracting physical hardware functionality into software. You can manage, maintain, and use your hardware infrastructure like an application on the web.
+
+Virtualization is a process that allows a computer to share its hardware resources with multiple digitally separated environments. Each virtualized environment runs within its allocated resources, such as memory, processing power, and storage. With virtualization, organizations can switch between different operating systems on the same server without rebooting. 
+
+Virtual machine
+A virtual machine is a software-defined computer that runs on a physical computer with a separate operating system and computing resources. The physical computer is called the host machine and virtual machines are guest machines.
+
+ Hypervisor
+The hypervisor is a software component that manages multiple virtual machines in a computer. It ensures that each virtual machine gets the allocated resources and does not interfere with the operation of other virtual machines. There are two types of hypervisors.
+
+Type 1 hypervisor
+A type 1 hypervisor, or bare-metal hypervisor, is a hypervisor program installed directly on the computer’s hardware instead of the operating system. Therefore, type 1 hypervisors have better performance and are commonly used by enterprise applications. KVM uses the type 1 hypervisor to host multiple virtual machines on the Linux operating system.
+
+Type 2 hypervisor
+Also known as a hosted hypervisor, the type 2 hypervisor is installed on an operating system. Type 2 hypervisors are suitable for end-user computing.
+
+What are the benefits of virtualization?
+1)Efficient resource use
+2)Automated IT management
+3)Faster disaster recovery
+
+What are the different types of virtualization?
+1)Server virtualization 
+2)Storage virtualization
+3)Network virtualization
+Data virtualization,Application virtualization ,Desktop virtualization
+
+ 
+EC2 stands for Elastic Compute Cloud. EC2 is an on-demand computing service on the AWS cloud platform. Under computing, it includes all the services a computing device can offer to you along with the flexibility of a virtual environment.
+
+Use Cases of Amazon EC2:
+1)Deploying Application
+2)Scaling Application
+3)Deploying The ML Models
+4)Hybrid Cloud Environment
+5)Cost-Effective
+
+AWS EC2 Instance Types:
+
+1)General Purpose Instances--even ratio of resources
+2)Compute Optimized Instances---media processing, high performance compute , gaming , etc ---deal for compute bound applications that benefit from high performance processors
+3)Memory-Optimized Instances --- processing large in memory datasets.--designed to deliver fast performance for workloads that process large data sets in memory.
+4)Storage Optimized Instances -- data warehouse , 
+5)Accelerated Computing Instances
+
+instance type example : R5dn.8xLarge ----R=instance family , 5 = inst generation , dn = additional capabilities , 8Xlarge = inst size.
+
+Storage types :
+1)block storage
+2)File storage
+3)object storage
+
+EBS(Elastic Block Storage)
+An Amazon EBS volume is a durable, block-level storage device that you can attach to your instances. After you attach a volume to an instance, you can use it as you would use a physical hard drive. 
+ EBS volumes are flexible.
+you can dynamically increase size, modify the provisioned IOPS capacity, and change volume type on live production volumes.
+ EBS volumes persist independently from the running life of an EC2 instance.
+You can attach multiple EBS volumes to a single instance. The volume and instance must be in the same Availability Zone
+Amazon EBS provides the following volume types: General Purpose SSD (gp2 and gp3), Provisioned IOPS SSD (io1 and io2), Throughput Optimized HDD (st1), Cold HDD (sc1), and Magnetic (standard). 
+
+General Purpose SSD (gp3,gp2) volumes:
+
+1)gp3
+ 
+A gp3 volume can range in size from 1 GiB to 16 TiB.
+gp3 volumes deliver a consistent baseline IOPS performance of 3,000 IOPS, which is included with the price of storage. You can provision additional IOPS (up to a maximum of 16,000) at a rate of 500IOPS per gb
+
+2) gp2
+1 GiB to 16 TiB. 
+Volumes 33.33 GiB and smaller are provisioned with the minimum of 100 IOPS.
+
+Volumes larger than 33.33 GiB are provisioned with 3 IOPS per GiB of volume size up to the maximum of 16,000 IOPS, which is reached at 5,334 GiB (3 X 5,334).
+
+Volumes 5,334 GiB and larger are provisioned with 16,000 IOPS.
+gp2 volumes smaller than 1 TiB (and that are provisioned with less than 3,000 IOPS) can burst to 3,000 IOPS when needed for an extended period of time.
+
+Provisioned IOPS SSD (io1,io2,io2Block Express volumes)
+
+io1:
+io1 volumes can range in size from 4 GiB to 16 TiB and you can provision from 100 IOPS up to 64,000 IOPS per volume.
+The maximum ratio of provisioned IOPS to requested volume size (in GiB) is 50:1. For example, a 100 GiB io1 volume can be provisioned with up to 5,000 IOPS.
+The maximum IOPS can be provisioned for volumes that are 1,280 GiB or larger (50 × 1,280 GiB = 64,000 IOPS).
+
+io2 Block Express volumes
+Sub-millisecond average latency
+Storage capacity up to 64 TiB (65,536 GiB)
+Provisioned IOPS up to 256,000, with an IOPS:GiB ratio of 1,000:1. Maximum IOPS can be provisioned with volumes 256 GiB and larger (1,000 IOPS × 256 GiB = 256,000 IOPS).
+
+Throughput Optimized HDD and Cold HDD volumes:
+Throughput Optimized HDD (st1) volumes provide low-cost magnetic storage that defines performance in terms of throughput rather than IOPS.
+125gb to 16tb volume
+max of 500 iops and io is 1mb
+{40mb/s/tb - base
+250mb/s/tb burst} - upto 500mb/s
+
+cold hdd:sc1
+On volume sizes ranging from 125gb to 16 TiB
+{12mb/s/tb - base
+80mb/s/tb burst} - upto 250mb/s
+
+Amazon EC2 instance store:
+An instance store provides temporary block-level storage for your instance. This storage is located on disks that are physically attached to the host computer. Instance store is ideal for temporary storage of information that changes frequently, such as buffers, caches, scratch data, and other temporary content.
+
+An instance store volume exists only during the lifetime of the instance to which it is attached.
+The data on an instance store volume persists even if the instance is rebooted. However, the data does not persist if the instance is stopped, hibernated, or terminated
+
+ 
+points to be noted for instance store:
+1) local to ec2 host i.e disks physically attached to ec2 host
+2)they are attached to ec2 instance at launch only
+3)loses its data if instance is moved resized and host has a hardware failure.
+4) has high performance compared to ebs volume
+5) generally price is included with the ec2 instance
+6) temporary/ephimeral storage.
+
+Amazon EBS snapshots
+
+You can back up the data on your Amazon EBS volumes by making point-in-time copies, known as Amazon EBS snapshots.
+ A snapshot is an incremental backup
+EBS snapshots are stored in Amazon S3, in S3 buckets that you can't access directly
+You can create and manage your snapshots using the Amazon EC2 console or the Amazon EC2 API
+
+Multi-volume snapshots
+
+Snapshots can be used to create a backup of critical workloads, such as a large database or a file system that spans across multiple EBS volumes. 
+You can track the status of your EBS snapshots through CloudWatch Events.
+Multi-volume snapshots allow you to take exact point-in-time, data coordinated, and crash-consistent snapshots across multiple EBS volumes attached to an EC2 instance
+
+How snapshots work
+The first snapshot that you create from a volume is always a full snapshot.
+Subsequent snapshots of the same volume are incremental snapshots.
+The size of a full snapshot is determined by the size of the data being backed up, not the size of the source volume.and data backuped determines the storage cost 
+cost is determined by gb-month(gb*month)
+
+Encryption support for snapshots
+	
+EBS snapshots fully support EBS encryption.
+Snapshots of encrypted volumes are automatically encrypted.
+Volumes that you create from encrypted snapshots are automatically encrypted.
+Volumes that you create from an unencrypted snapshot that you own or have access to can be encrypted on-the-fly.
+When you copy an unencrypted snapshot that you own, you can encrypt it during the copy process.
+
+
+
+
+
+
+
+
+
+
+

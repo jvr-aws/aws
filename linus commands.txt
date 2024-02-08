@@ -1,0 +1,16 @@
+linus commands
+
+ls  – Show files and directories that are not hidden
+
+ls -a  -- display all files and subdirectories in the current directory, including hidden “.” And “..” etc.
+
+ls -A  -- show all files and subdirectories in the current directory, including hidden files, but excluding . And ..
+
+ ls -l -- display detailed information of non-hidden files and directories.
+
+ls -al --- display all files and subdirectories in the current directory, including hidden “.” And “..” etc. details.
+
+ls -lrt --- sort non-hidden files and directories by date from old to new.
+
+ls -r ---- reverse the order
+ls -t ---- sort by time modified

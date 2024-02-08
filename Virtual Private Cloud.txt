@@ -1,0 +1,109 @@
+Virtual Private Cloud
+
+
+->Amazon VPC or Amazon Virtual Private Cloud is a service that allows its users to launch their virtual machines in a protected as well as isolated virtual environment defined by them.
+
+->VPC enables us to select the virtual address of our private cloud and we can also define all the sub-constituents of the VPC like subnet, subnet mask, availability zone, etc on our own. 
+
+->We can place the necessary resources and manage access to those resources in the VPC, a private area of Amazon that we control.
+->You can launch AWS resources into a defined virtual network using Amazon Virtual Private Cloud (Amazon VPC).
+/16 user-defined address space maximum (65,536 addresses)
+
+->To reduce traffic, the subnet will divide the big network into smaller, connected networks. Up to /16, 200 user-defined subnets.
+
+NOTE :{A Subnet is short for Subnetwork. It is a logical subdivision of an IP network.}
+
+->Route Tables are mainly used to Define the protocol for traffic routing between the subnets.
+
+NOTE :{A Router is a networking device that forwards data packets between computer network. 
+This device is usually connected to two or more different networks.}
+
+NOTE :{A routing table is a set of rules, often viewed in table format, that is used to determine where data packets traveling over an Internet Protocol (IP) network will be directed. All IP-enabled devices, including routers and switches, use routing tables.}
+
+NOTE :{Subnet Mask: The mask that is used to match a destination IP address to the network ID.}
+
+->Network Access Control Lists (NACL) for VPC serve as a firewall by managing both inbound and outbound rules. There will be a default NACL for each VPC that cannot be deleted.
+
+NOTE :{Security groups and NACL both act as virtual firewalls which control the traffic from Inbound and Outbound of the resources.}
+NOTE :{Security groups are virtual shields or protectors of EC2 instances. Unless specifically allowed By default all Inbound traffic is blocked whereas all Outbound traffic is allowed from the Instance.}
+NOTE :{In the security groups, we cannot block a specific IP address because it doesn’t have any DENY rule just like ALLOW rule. To achieve this we can make use of NACL.}
+NOTE :{Here are some Limitations of Security Groups in AWS:
+      For a specific Security Group, the maximum Inbound and Outbound rules is 60
+      For any region the default limit of security groups is 2,500 and it can be extended 10,000 Maximum for any further extension we have to do service requests.
+      Cannot block the DNS traffic or the traffic from the route 53.
+      Cannot be applied to the multiple VPCs.}
+
+NOTE: {Network Access Control List is also a virtual firewall for subnets, which controls the Inbound and Outbound traffic of Subnets. After the creation of VPC, a Default NACL will be associated and allow all Inbound and Outbound Traffic.}
+
+-->Difference between security group and NACL?
+NACL
+Network Access Control List that helps provide a layer of security to the amazon web services. There are two kinds of NACL- Customized and default.
+Multiple subnets can be bound with a single NACL, but one subnet can be bound with a single NACL only, at a time
+NACL can be understood as the firewall or protection for the subnet.
+These are stateless, meaning any change applied to an incoming rule isn’t automatically applied to an outgoing rule.
+Example: If a request comes through port 80, it should be explicitly indicated that its outgoing response would be the same port 80.
+NACL can be used to support as well as deny rules. Denial of rules can be explicitly mentioned, so that when the layer sees a specific IP address, it blocks connecting to it.
+It is considered to be the second layer of defence, which helps protect AWS stack. It is an optional layer for VPC, which adds another security layer to the amazon service.
+
+Security Group
+A security group has to be explicitly assigned to an instance; it doesn’t associate itself to a subnet.
+Security groups are associated with an instance of a service. It can be associated with one or more security groups which has been created by the user.
+Security group can be understood as a firewall to protect EC2 instances.
+These are stateful, which means any changes which are applied to an incoming rule is automatically applied to a rule which is outgoing.
+Example: If the incoming port of a request is 80, the outgoing response of that request is also 80 (it is opened automatically) by default.
+They support rules only, and the default behaviour is denial of all rules.  Every VPC can belong to different security groups.
+It is considered to be the first defence layer that helps protect the Amazon Web Services infrastructure.
+
+Note: {EC2 instance will be deployed in the VPC in a particular subnet so when there is incoming traffic first the traffic must be matched with NACL then it will be routed to security groups other wise the traffic will be denied at the subnet level traffic will not reach the application.}
+
+Internet Gateway (IGW) will make it possible to link the resources in the VPC to the Internet.{0.0.0.0\0}
+
+Network Address Translation (NAT) will enable the connection between the private subnet and the internet.
+
+Note: {Network Address Translation (NAT) is a process in which one or more local IP address is translated into one or more Global IP address and vice versa in order to provide Internet access to the local hosts.}
+Note: { Also, it does the translation of port numbers i.e. masks the port number of the host with another port number, in the packet that will be routed to the destination. It then makes the corresponding entries of IP address and port number in the NAT table. NAT generally operates on a router or firewall. }
+
+What difference between IGW & NAT Gateway ?
+
+Internet Gateway
+Connects a VPC to the internet
+Acts as a virtual router between a VPC and the internet
+Required for resources within a VPC to be accessible from the internet
+Instances within a public subnet must have public IP addresses to communicate with the internet
+Used for hosting publicly accessible resources like web servers
+
+NAT Gateway
+Enables outbound traffic from a private subnet to the internet
+Translates private IP addresses of instances to public IP addresses
+Used when resources within a private subnet require internet access but should not be directly accessible from the internet
+Instances within a private subnet can have private IP addresses
+Used for instances that need to access the internet for updates or data retrieval
+
+
+Amazon VPC (Virtual Private Cloud) Fundamentals
+If the subnet has internet access then it is called PublicSubnet.
+If the subnet doesn’t have internet access then it is called PrivateSubnet.
+A subnet must reside entirely within one Availability Zone. 
+An entire subnet must be contained within a single Availability Zone.
+Access between instances is managed by VPC Security Groups for both inbound and outgoing traffic (EC2 Security Groups can only define inbound rules).
+We can specify Subnet IP Routing with the aid of the Route Table.
+If a server/instance which is in a private subnet wants to reach the internet then it must have NAT in a public subnet.
+
+
+Classless Inter-Domain Routing (CIDR) is a method of IP address allocation and IP routing that allows for more efficient use of IP addresses.
+
+For example, an IP address of 192.168.1.0 with a prefix length of 24 would be represented as 192.168.1.0/24. This notation indicates that the first 24 bits of the IP address are the network prefix and the remaining 8 bits are the host identifier.
+
+Advantages of the Traditional Class-Based Addressing System of CIDR(Classless Inter Domain Routing ):
+1)Efficient use of IP addresses
+2)Flexibility: CIDR allows for more flexible IP address allocation
+3)Reduced administrative overhead: by allowing for the allocation and routing of IP addresses in a more efficient and flexible way.
+
+Advantages of CIDR: Efficient use of IP addresses,Flexibility,Better routing.
+Disadvantages of CIDR: Complexity,Compatibility issues
+
+Overall, CIDR is a useful and efficient method of IP address allocation and routing.
+
+VPC peering can establish the connection between two Virtual Private Clouds which enables you to route the traffic between two VPCs using the IP address. 
+
+
