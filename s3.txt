@@ -16,15 +16,257 @@ It provides a secure and scalable repository for storing of Objects such as Text
 Each S3 bucket name should be named globally unique and should be configured with ACL (Access Control List).
  Data, in S3, is stored in containers called buckets. Each bucket will have its own set of policies and configurations.
 
-S3 Versioning: Versioning means always keeping a record of previously uploaded files in S3. Points to Versioning are not enabled by default. Once enabled, it is enabled for all objects in a bucket. Versioning keeps all the copies of your file
-Objects with the same key can be stored in a bucket if versioning is enabled (since they have a unique version ID).
+NOTE: A policy is an object in AWS that, when associated with an identity or resource, defines their permissions.
 
-Access control lists (ACLs):
- A document for verifying access to S3 buckets from outside your AWS account.
- An ACL is specific to each bucket. You can utilize S3 Object Ownership, 
+NOTE: S3 Security is controlled via a combination of Identity Policies, Bucket Policies (Resource Policies) and Legacy Bucket and Object ACLs.
 
- Keys and Null Objects
-Keys: The key, in S3, is a unique identifier for an object in a bucket. For example in a bucket ‘ABC’ your GFG.java file is stored at javaPrograms/GFG.java then ‘javaPrograms/GFG.java’ is your object key for GFG.java.
+------>Identity-based policies are attached to an IAM user, group, or role. These policies let you specify what that identity can do (its permissions).
+
+------->With resource-based policies, you can specify who has access to the resource and what actions they can perform on it.
+
+imagery explanation : https://docs.aws.amazon.com/images/IAM/latest/UserGuide/images/Types_of_Permissions.diagram.png
+
+
+1)Identity-Based Policies (IAM Policies):
+Scope: Identity-based policies are applied at the user, group, or role level within AWS IAM (Identity and Access Management).
+Purpose: These policies define what actions a user, group, or role is allowed or denied to perform on AWS resources.
+Example: You might create an IAM policy that grants permissions to launch EC2 instances, manage S3 buckets, or access other AWS services.
+Usage: Identity-based policies are primarily used for managing access to AWS services and resources at the user, group, or role level.
+
+2)Resource Policies:
+Scope: Resource policies are applied at the resource level, typically associated with specific AWS services such as S3 buckets, Lambda functions, and more.
+Purpose: These policies define who can access the resource and what actions they can perform on it.
+Example: In the case of an S3 bucket, a resource policy might grant public read access to all objects in the bucket or restrict access based on IP addresses.
+Usage: Resource policies are used for controlling access to specific AWS resources at the resource level. They are not tied to individual IAM users or roles.
+
+3)ACLs (Access Control Lists):
+Scope: ACLs are applied at the object (file) level within an S3 bucket.
+Purpose: ACLs define individual object-level permissions within an S3 bucket.
+Example: You can use ACLs to grant read or write permissions on specific objects to specific AWS accounts or predefined groups.
+Usage: ACLs provide fine-grained control over individual objects within an S3 bucket.
+
+In summary:
+Identity-Based Policies (IAM Policies) are for managing access at the user, group, or role level across AWS services.
+Resource Policies are specific to certain AWS resources and control access at the resource level.
+ACLs are used to set fine-grained access controls on individual objects within an S3 bucket.
+
+Static Website Hosting:
+Amazon Simple Storage Service (S3) provides a feature called "Static Website Hosting," which allows you to host static websites directly from your S3 bucket. This is a cost-effective and scalable solution for hosting simple, static websites without the need for a traditional web server.
+
+benefits of  s3 :
+1)Offloading :
+A website provides dynamic html page and static media (images , videos , etc)  and they comsume 90% of the storage space and requrie a lot of compute service and compute servieces are expensive . so these media can be stored in an s3 bucket and offloaded from the bucket .This offloading can help improve performance and reduce the load on your web server.
+
+2)band-off pages:
+when a website gets crashed of off for maintenance or has bugs to resolve you can direct the trafic to s3 bucket where you can set the index page saying "website is out of service or giving them support team details".	
+
+Once configured, your website will be accessible using the S3 bucket endpoint provided in the static website hosting settings.
+Example endpoint: http://your-bucket-name.s3-website-your-region.amazonaws.com
+
+
+S3 Versioning:
+ Amazon S3 (Simple Storage Service) versioning is a feature that allows you to keep multiple versions of an object in a bucket. When versioning is enabled for an S3 bucket, each time you upload a new version of an object with the same key (object name), S3 automatically archives the previous version, allowing you to maintain a complete history of changes to your objects.
+
+1)Versioning in MFA Delete Mode:
+You can enable MFA (Multi-Factor Authentication) delete mode for an S3 bucket, which adds an extra layer of security for deleting versions of objects.
+
+2)Versioning Impact on Storage Costs:
+Enabling versioning can impact your storage costs because each version of an object is stored separately. However, it provides data durability and the ability to recover from accidental deletions or modifications.
+
+3)Cross-Region Replication with Versioning:
+If you enable versioning on a source bucket and replicate it to a destination bucket in a different region, the versioning information is also replicated.
+
+----->s3 performance optimization:
+When you upload a file to Amazon S3, it is stored as an S3 object. Objects consist of the file data and metadata that describes the object.
+ The maximum size of a file that you can upload by using the Amazon S3 console is 160 GB. To upload a file larger than 160 GB, use the AWS Command Line Interface (AWS CLI), AWS SDKs, or Amazon S3 REST API.
+
+1)Single PUT Upload:
+data is transfered in a single stream. if stream fails then upload fails
+Upload an object in a single operation by using the AWS SDKs, REST API, or AWS CLI –   a single object up to 5 GB in size.
+
+Upload a single object by using the Amazon S3 console – With the Amazon S3 console, a single object up to 160 GB in size
+
+2) Multi part upload 
+Multipart upload allows you to upload a single object as a set of parts upto 10,000 parts sized from 5mb to 5gb.
+ You can upload these object parts independently and in any order. 
+If transmission of any part fails, you can retransmit that part without affecting other parts.
+ After all parts of your object are uploaded, Amazon S3 assembles these parts and creates the object
+
+------> min data size - 100mb
+
+Using multipart upload provides the following advantages:
+
+Improved throughput 
+Quick recovery from any network issues 
+Pause and resume object uploads – You can upload object parts over time. After you initiate a multipart upload, there is no expiry; you must explicitly complete or stop the multipart upload.
+Begin an upload before you know the final object size – You can upload an object as you are creating it.
+
+S3 Transfer Acceleration:
+
+You can use Amazon S3 Transfer Acceleration for fast, easy, and secure transfers of files over long distances between your client and an S3 bucket.
+ Transfer Acceleration uses the globally distributed edge locations in Amazon CloudFront.
+ As the data arrives at an edge location, data is routed to Amazon S3 over an optimized network path.
+you can get acceletated speed upto 500% of that of multipart upload.
+
+
+------->Key management service:
+
+AWS Key Management Service (AWS KMS) makes it easy for you to create and manage cryptographic keys and control their use across a wide range of AWS services and in your applications.
+ AWS KMS is a secure and resilient service that uses hardware security modules that have been validated under FIPS 140-2(level2), or are in the process of being validated, to protect your keys.
+
+1)Key Hierarchy:
+KMS organizes keys in a hierarchy. At the top level, you have a Customer Master Key (CMK). There are two types of CMKs: AWS Managed CMKs and Customer Managed CMKs.
+AWS Managed CMKs: These keys are created, managed, and maintained by AWS.
+Customer Managed CMKs: You have more control over these keys. You can either import your own key material or use AWS-generated key material to create and manage these keys.
+
+2)Customer Master Keys (CMKs):
+
+Types of CMKs:
+AWS Managed CMKs: These keys are created, managed, and maintained by AWS.
+---->Customer Managed CMKs: You have more control over these keys. You can either import your own key material or use AWS-generated key material.
+---->Key Material: CMKs have associated cryptographic key material used for encryption and decryption.
+---->Key Policies: Access to CMKs is controlled by key policies, which define who can use the key and what operations they can perform.
+
+3)Data Keys:
+
+---->Generation: When you want to encrypt data, KMS generates a data key. Data keys are specific to a particular encryption operation.
+---->Data Key Encryption: The data key is then encrypted using the CMK associated with the encryption operation. This process is known as envelope encryption.
+---->Use in Encryption/Decryption: The encrypted data key is used to encrypt the actual data. When decryption is required, the encrypted data key is sent to KMS along with the necessary permissions to decrypt it using the associated CMK. Once decrypted, the data key is used to decrypt the actual data.
+---->Temporary and Disposable: Data keys are temporary and are used for a specific encryption operation. They are generated on-demand and are meant to be disposable.
+
+3)Envelope Encryption:
+---->Security and Efficiency: Envelope encryption is a security best practice that combines the security of a master key (CMK) with the efficiency of using disposable data keys for encrypting large volumes of data.
+
+4)Cross-Region Replication:
+KMS supports cross-region replication of keys. This enables you to replicate keys to different AWS regions for increased availability and disaster recovery.
+
+5)Key Rotation:
+KMS allows you to enable automatic key rotation for customer managed CMKs, ensuring that new cryptographic material is used periodically.
+Automated Key Rotation (Customer Managed CMKs): For customer-managed CMKs, you can enable automated key rotation. This feature automatically rotates the cryptographic material of the CMK, providing enhanced security.
+
+kms keys are isolated to a region.
+
+Symmetric Keys:
+--->Definition:
+Symmetric keys are a type of cryptographic key used in symmetric encryption algorithms.
+With symmetric encryption, the same key is used for both encryption and decryption.
+
+--->Use in KMS:
+Symmetric keys are often used for encrypting and decrypting large amounts of data efficiently.
+In KMS, when you request a data key for symmetric encryption, KMS generates a data key, encrypts it using a Customer Master Key (CMK), and provides you with the encrypted data key.
+
+--->Characteristics:
+Faster than asymmetric encryption for bulk data.
+Well-suited for scenarios where the same key is used for both encryption and decryption.
+
+ Asymmetric Keys:
+--->Definition:
+Asymmetric keys are a pair of keys, consisting of a public key and a private key, where each key can only decrypt data encrypted by the other.
+
+--->Use in KMS:
+Asymmetric keys are often used for tasks like digital signatures and key exchange in secure communication protocols.
+In KMS, asymmetric keys are used in operations like signing and verifying data.
+
+--->Characteristics:
+Slower than symmetric encryption for bulk data but essential for secure communication and digital signatures.
+Public keys are shared openly, while private keys must be kept confidential.
+
+Client side encryption:
+Client-side encryption is the act of encrypting your data locally to help ensure its security in transit and at rest. To encrypt your objects before you send them to Amazon S3, use the Amazon S3 Encryption Client. When your objects are encrypted in this manner, your objects aren't exposed to any third party, including AWS.
+
+server side encryption:
+encryption is done on the server .
+sse - c
+sse - s3
+sse - kms
+
+(SSE-C):
+ By using server-side encryption with customer-provided keys (SSE-C), you can store your own encryption keys
+When you upload an object, Amazon S3 uses the encryption key that you provide to apply AES-256 encryption to your data. Amazon S3 then removes the encryption key from memory. -->A hash of the key is stored with the encrypted data .
+ 
+When you retrieve an object, you must provide the same encryption key as part of your request.
+ Amazon S3 first verifies that the encryption key that you provided matches by comparing both hash codes, and then it decrypts the object before returning the object data to you.
+
+SSE-s3:
+All new object uploads to Amazon S3 buckets are encrypted by default with server-side encryption with Amazon S3 managed keys (SSE-S3).Amazon S3 encrypts each object with a unique key. and this unique key is encrypted with a master key which stays with s3 . 
+As an additional safeguard, it encrypts the key itself with a key that it rotates regularly
+
+sse-kms:
+data encryption keys(deks)
+
+s3 object storage classes:
+1. Standard:
+Description: General-purpose storage class suitable for frequently accessed data.
+Characteristics:
+Low-latency and high-throughput performance.
+Designed for durability of 99.999999999% (11 9's).
+
+2. Intelligent-Tiering:
+Description: Storage class that automatically moves objects between two access tiers based on changing access patterns.
+Characteristics:
+Low-latency and high-throughput performance.
+Cost optimization by automatically moving objects to the infrequent access tier when access patterns change.
+
+3. Standard-IA (Infrequent Access):
+Description: Suitable for infrequently accessed data with a slightly lower storage cost than Standard.
+Characteristics:
+Low-latency and high-throughput performance.
+Designed for durability of 99.999999999% (11 9's).
+
+4. One Zone-IA:
+Description: Infrequent access storage class with data stored in a single availability zone.
+Characteristics:
+Lower-cost option for infrequently accessed data with a reduced level of redundancy.
+Designed for durability of 99.999999999% (11 9's) within a single availability zone.
+
+5. Glacier:
+Description: Suitable for long-term archival storage with retrieval times ranging from minutes to hours.
+Characteristics:
+Low-cost storage with delayed retrieval.
+Designed for durability of 99.999999999% (11 9's).
+
+6. Glacier Deep Archive:
+Description: Lowest-cost storage option for long-term archival with the longest retrieval times.
+Characteristics:
+Very low-cost storage.
+Designed for durability of 99.999999999% (11 9's).
+
+--->bucket keys:
+ When you use SSE-KMS to protect your data without an S3 Bucket Key, Amazon S3 uses an individual AWS KMS data key for every object.
+
+When you configure your bucket to use an S3 Bucket Key for SSE-KMS, AWS generates a short-lived bucket-level key from AWS KMS then temporarily keeps it in S3. This bucket-level key will create data keys for new objects during its lifecycle. 
+allowing you to access AWS KMS-encrypted objects in Amazon S3 at a fraction of the previous cost.
+
+----> s3 life cycle configuration:
+ Amazon S3 (Simple Storage Service) lifecycle configuration allows you to define rules for managing the lifecycle of your objects stored in S3 buckets. With lifecycle configuration, you can automate actions such as transitioning objects between storage classes, deleting objects, and setting expiration policies. This helps you optimize storage costs and ensure that your data is retained or disposed of according to your business requirements. Here are the key components of S3 lifecycle configuration:
+
+Lifecycle Rule Components:
+
+Rule Name:
+A unique identifier for the lifecycle rule within the bucket.
+
+Filter:
+Specifies which objects the rule applies to based on criteria such as prefixes, tags, or object creation date.
+
+Transitions:
+Defines when to transition objects from one storage class to another. For example, you can transition objects to the S3 Standard-IA (Infrequent Access) storage class after a specified number of days.
+
+Expiration:
+Specifies when objects are automatically deleted from the bucket. You can set a fixed expiration date or configure a relative expiration period.
+
+Noncurrent Version Transitions:
+Applies to versioned objects and defines when to transition noncurrent versions to a different storage class.
+
+Noncurrent Version Expiration:
+Sets the expiration period for noncurrent versions of objects.
+
+s3 standard 
+    s3 standard IA
+          s3 intelligent tiering
+               s3 one zone IA
+                      s3 glacier-instant retireval
+                             s3 glacier-flexible retireval
+                                        s3 glacier- deep archive
 
 
 
