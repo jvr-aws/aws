@@ -1,0 +1,130 @@
+Amazon CloudWatch is a monitoring and observability service provided by Amazon Web Services (AWS). It allows users to collect and track metrics, collect and monitor log files, and set alarms. 
+
+1. Metrics:
+Definition: Metrics are the fundamental concept in CloudWatch. They represent a time-ordered set of data points, such as CPU usage, network traffic, or custom application-specific metrics.
+Use CloudWatch Metrics to monitor resource utilization and create Dashboards for customized views.
+
+2. Logs:
+Definition: CloudWatch Logs allow users to store, monitor, and access log files from Amazon EC2 instances, AWS CloudTrail, and other AWS services. Logs can be searched, filtered, and analyzed.
+Store, search, and analyze logs using CloudWatch Logs. Organize logs into Log Groups.
+
+3. Events:
+Definition: CloudWatch Events enable users to respond to state changes in AWS resources. Events can trigger automated responses using AWS Lambda functions, SNS notifications, and other targets.
+Use CloudWatch Events to respond to changes in AWS resources by creating rules and defining targets.
+
+4. Alarms:
+Definition: Alarms watch a single metric over a specified time period and perform one or more actions based on the value of the metric relative to a threshold over time. For example, an alarm can trigger an Amazon SNS notification.
+Set up Alarms to receive notifications when certain thresholds are breached.
+
+
+cloud watch architecture:
+
+points to be remembered:
+
+1)Data Points:
+Definition: A data point is a set of values associated with a timestamp.
+
+2) Metrics:
+Definition: These are the time ordered sets of data points.
+
+3) Namespace:
+Definition: Metrics are grouped into namespaces, providing a way to organize and categorize related metrics.
+These are the containers which store the metrics depending on where they belong 
+for ex > aws/ec2 is a container which stores metrics from ec2 instances.  ----similarly aws/lambda
+
+-----only with metric name and namespace it gets difficult to identify the metric as there are many instances in aws/ec2 so there is another thing introduced called dimension..
+
+4) Dimension:
+A dimension is an attribute of a metric that provides additional information to uniquely identify that metric. Dimensions consist of a name and a value, forming a name/value pair.
+
+so a dimension is a name/value pair for ex : name = "InstanceID" , and value = "721927889992037" . so with this dimension feature we identify which instance it belongs in the aws/ec2 namespace ...
+
+5) Resolution : 
+so if we are chechking cpuUtilization with a resolution of 60s granularity then the cpuUtilization is updated every 60 seconds.
+highest resolution is 1s.
+
+6) Retention : for particular resolution the data is retained for a particular amount of time i.e
+--> for less than 60s resolution data is retained for 3hrs
+--> for 60s = 15 days
+-->for 300s = 63 days
+--> 3600s = 455 days
+
+as data ages , it gets aggregated and stored for longer periods with less resolution.
+so if data is recorded with 1s resolution for 3 hrs and then changed to 60s for 15 days 
+later changed to 300s resolution for 63 days and goes on..
+
+7) statistics : aggregation of data over a period of time . you can get min value ,max and average values over that particular period of time.
+
+
+**********
+
+logs:
+-- public service i.e you can access from anywhere if you have permissions.
+-- it can store , monitor and access logging data
+--has builtin integrations with aws resources like ex: VPC,EC2 flowlogs, lambda , cloudtrial , r53 etc.
+-- they are capable of generating metrics based on logs (metric filter )
+
+1) log events :  Log events are individual records containing log data. 
+Each log event includes a timestamp, a message(raw block of data), and optional additional fields. 
+Log events are stored in log streams 
+
+2)log Stream : A log stream is a sequence of log events that share the same source.ex cpu utilization from a particular ec2 instance
+
+3) log group :  A log group is a logical container for log streams for same type of logging . ex log streams of cpu utilization from more than 1  ec2 instances.
+
+4)Retention and permissions : there are defined on the log group .it means they are applied to all the log streams in that log group.
+
+5) metric filters: they are defined on log group as well.
+ They are constantly looking for  custom patterns in log data like failed ssh login or error code . and once detected these metric filters extract a 
+metric. and these mertics can be associated with alarms to notify administrators or take any other action. 
+
+events and event bridge: 
+CloudWatch Events is a service that delivers a stream of system events that describe changes in  AWS resources.
+EventBridge is an evolution of CloudWatch Events, offering a more advanced event bus service that extends beyond CloudWatch i.e 3rd parties and custom applications.
+
+both implement an architecture in which if "X" happens at certains times of "Y" then do "Z" .
+x is a producer of event, y is a certain  time or time period and z is a supported target service to which the event has to be delivered.
+both have a default event bus for an account. bus refers to stream of events of the aws resources in an account.
+in cloud watch events there is only 1 eventbus but in cloudwatch event bridge you can create additional event busses
+
+
+explaination: 
+when there are any changes in the aws resources the events are created in the event bus.
+Event bridge runs on the event bus and monitors the events
+event bridge has rules(event pattern rules and schedule rules).
+so when an event is matched with the rules in the event bridge then the event that is matched id delivered to one or more targets.
+
+
+******************
+
+AWS Config :
+
+AWS Config is a service in Amazon Web Services (AWS) that provides a way to assess, audit, and evaluate the configuration of AWS resources within your account.
+--it records configuration changes over time in resources.
+--it doesnot prevent the changes
+--it is a regional servies  that allows cross region and account aggregation
+--can generate sns notifications and near real time events via event bridge and lambda.
+
+Config Rules are the building blocks of AWS Config. They are customizable, rule-based checks that evaluate resource configurations for compliance with your desired configurations or industry best practices.
+
+--when aws config is enabled on aws resources, the configuration of all the resources is constantly tracked 
+--when the config is changes a configuration item is created for that resource
+--a config item is the metadata about the state of resources at a specific point in time and  its relations 
+--all config items of a resource are called configuration history 
+--this config history is stored in the s3 config bucket
+
+additional features:
+config rules: 
+-- resources are evaluated against  config rules (managed by aws or custon created by lambda) if the resource config changes are compliant or not.
+and that data is sent back to aws config.
+-- aws config can send data to sns (to send a notification to the administrator or others)
+--aws config can be integrated with eventbridge so event bridge can take action depending if the changes are compliant pr non compilant.
+
+
+
+
+
+ 
+
+
+
