@@ -1,0 +1,98 @@
+before we go to Route 53 you should know how dns and dns resolver works and know few terms like tld,domain registry,domain,zone , zonefiles ,etc.
+
+-->When a user types a domain name (e.g., www.example.com) into a web browser, their device initiates a DNS resolution process to find the corresponding IP address.
+
+-->At first it chechs its local cache for the ip address of the requested domain name.if found , sends ip to the user
+
+-->if not found,then the device's operating system resolver sends a query to a DNS resolver specified in the device's network settings.
+
+-->dns resolver checks is cache . if not found, then  it contacts the authoritative DNS server for the top-level domain (TLD) of the requested domain (e.g., ".com"). TLD server responds with the authoritative dns server.
+
+--> the resolver querries  authoritative dns server for the next part of the domain(NameServer ex: amazon.com).dns servers reply back with the ip add of name server.
+
+-->dns resolver querries the name server.Name server has zone files which have records of ip addresses for the domain(amazon.com). 
+so nameservers host the zone for that particular domain.which means server host the zone files which have data about the zone hence hosting the zone.
+
+--> A zone typically represents a domain and its subdomains
+
+A zone file : A zone file is a text file that contains information about a DNS zone. It includes mappings between domain names and IP addresses.
+
+
+Route 53:Amazon Route 53 is a scalable and highly available Domain Name System (DNS) web service provided by Amazon Web Services (AWS).
+Its features:
+1.Register Domains
+2. It hosts zone file on managed nameservers which it porvides.
+3. it is a global service on a single database .
+4. globally resillient
+
+-- it has relations with all the domain registries. (IANA)
+--route 53 creates zone files for the domain created and puts this zone file on the nameservers. 
+-- and also allocates name servers (these are created and managed by aws) and generally 4 servers for 1 zone.
+--these nameservers records(adds records i.e ipp add and Names) are then added to the top level domain registries
+
+
+zone files are usually called as hosted zones in aws hosted on 4 managed name servers.
+Hosted zone is a DNS db for a domian.
+hosted zones can be public(access through internet i.e hosted on public name server) or private(vpc's which it connected to i.e hosted on private name server)
+hosted zones stores records(recordsets).
+ 
+ Types of records:
+
+1) gives a dns zone (amazon.com) they have records called A records and  AAAA records.
+A record maps domain name to ip v4 address
+AAAA record maps domain name to ipV6 address
+generally we only create 2 records with same name (A and AAAA)
+
+2)CNAME(Canonical name): Cname are aliases that point toward other records .They dont point towards ip address.
+they are used to reduce the admin overhead i.e if ip address of a record changes you need to only update that record .. and c records point towards that record .
+
+3)MX record(mail exchange):Specifies mail servers responsible for receiving email on behalf of the domain. 
+
+4)TXT Record:Holds text information. Commonly used for various purposes, including verifying domain ownership, SPF records for email authentication, and more.
+
+5)NS record(name server):
+These are present in the TLD zone which direct the dns server to the respective NAme server zone
+
+IMP note :  TTL(time to live) value on records describe for how much time these ip address are authoritative after fetched by dns resolver and stored in cache.
+
+6) Alias records: They are specific to AWS Route 53 and are used to map your domain to AWS resources such as Elastic Load Balancers (ELB), Amazon S3 buckets, CloudFront distributions, and other AWS endpoints.
+If we are directing A record to an ELB then we use "A ALIAS" record
+
+Difference between cname record and r53 alias record
+-->If you need to associate the apex (root) domain with an AWS resource, you must use an Alias record as CNAME records are not allowed at the apex.
+
+-->If you are using AWS services like ELB, S3, or CloudFront, it is recommended to use Alias records for seamless integration and better performance.
+
+
+Simple routing: With simple routing, you typically route traffic to a single resource via multiple servers and client chooses the server.
+simple routing doesnt support health checkup.it doesnot see if the particular server is crowded or not. 
+
+R53 Health Check: 
+--> health checks are seperate from , but are used by records
+--> health checkers are located globally
+--> checks every 30 sec( can be changed to 10 sec but extra cost)
+
+-->Route 53 supports several health check types, including HTTP, HTTPS, TCP, and HTTPS with a custom domain name. You can choose the type that best fits your use case. For example, you might use an HTTP health check to verify that a web server is responding to HTTP requests.
+
+--> based on checks it verifies if servers are healthy or unhealthy
+--> checks can be of 3 types : endpoiont checks,cloud watch alarm checks , checks of checks.
+--> if 18% of health checkers available globally  report as healthy , the health check is healthy.
+
+R53Failover Routing: IN the host zone there are 2 records kept (primary and secondary). heakth check is done on primary record and if it fails health check then trafic is routed to secondary record.
+primary direct trafic to the domain where as sometime secondary connected to s3 bucket or an ec2 instance for situations like 'out of band' failure or maintenance of the domain.
+
+ 
+
+
+
+
+
+
+
+
+
+
+
+ 
+
+
