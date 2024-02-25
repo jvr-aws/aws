@@ -81,6 +81,37 @@ R53 Health Check:
 R53Failover Routing: IN the host zone there are 2 records kept (primary and secondary). heakth check is done on primary record and if it fails health check then trafic is routed to secondary record.
 primary direct trafic to the domain where as sometime secondary connected to s3 bucket or an ec2 instance for situations like 'out of band' failure or maintenance of the domain.
 
+Multivalue routing:Multivalue answer routing lets you configure Amazon Route 53 to return multiple values, such as IP addresses for your web servers, in response to DNS queries. 
+
+-->multivalue routing supports multiple records with the same name.
+-->each records is independent and can have associated health checks.
+--> 8 healthy records are returned for dns querries . if more than 8 records exist then 8 are selected at random. client chooses and usees 1 value.
+
+Weighted Routing: It allows you to assign different weights to multiple resources (such as servers or endpoints) associated with a single DNS name. The weights determine the proportion of traffic that is directed to each resource, enabling you to perform traffic splitting and implement various deployment and testing strategies.
+
+-->"0" weight means that the record are not returned.
+-->if chosen record is unhealthy then process continuies until the healthy record is returned.
+
+Latency based routing:
+-->It allows you to route traffic based on the lowest network latency for end-users.
+-->each record is assigned with a region
+-->aws maintains a record between users location , regions tagged to records and latency.
+-->so when user tries to access a record.aws determines his location ,checks table with his location for low latency and selects the destination region and returns the record assigned to that region
+-->if it is unhealthy , it selects the record with next lowest latency.
+-->increases performance and user experience
+
+Geolocation routing: 
+Geolocation routing lets you choose the resources that serve your traffic based on the geographic location of your users, meaning the location.
+-->it returns records based on location.
+--> if you are not in the country you cannot access that particular record.
+ 
+Geoproximity routing:
+Amazon Route 53 route traffic to your resources based on the geographic location of your users and your resources. You can also optionally choose to route more traffic or less to a given resource by specifying a value, known as a bias. A bias expands or shrinks the size of the geographic region from which traffic is routed to a resource.
+
+
+DNSSEC?
+
+
  
 
 
