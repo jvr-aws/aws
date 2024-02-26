@@ -1,0 +1,80 @@
+RDS
+Relational database:
+Amazon RDS (Relational Database Service) is a fully managed database service provided by Amazon Web Services (AWS).
+
+-->It simplifies the process of setting up, operating, and scaling relational databases in the cloud.
+-->Uses sql as querry language
+--> DB engines maintained by AWS
+    postgres
+    Mysql
+    MAriaDB
+    Oracle
+    MS SQL Server
+    IBM DB2
+    Aurora(AWS Proprietary database)
+
+Advantages of using RDS vs deploying db on EC2 instance:
+RDS is a managed service:
+-->Automated provisioning and OS patching
+-->contineous backups and restore to specific time stamp
+-->monitoring dashboards
+-->Read replicas for improved read performance
+-->multi AZ setup for disaster recovery
+-->maintenance windows for upgrades
+-->scaling capability
+-->storage backed on ebs
+
+
+RDS storage auto scaling:
+-->helps you to increase storage on your rds db
+-->you have to setup maximum storage threshold
+-->automatically modifies storage if :
+     *free storage is less than 10%
+     *low storage lasts at least 5 minutes
+
+
+RDS Read replica:
+-->Read replicas in RDS allow you to create one or more copies of your database for read-only purposes.
+-->Replication is ASYNC, so read are eventually consistent
+-->Replicas can be promoted to their own DB.
+-->so to run a reporting application you can create a replica and then run the application on the replica.
+-->replicas are used for read only and not for insert ,update or delete.
+-->you can do replication in same zone , same region btw different AZ and also cross-region.
+
+RDS MultiAZ(DIsaster recovery)
+-->SYNC replication.
+-->replica is called RDS DB Instance standby. In case of failover of master DB in zone 1, instance standby in zone 2 become the master
+--> RDS DB Instance standby is not used for scaling i.e no reads and writes
+-->Read replicas can be setup as MultiAZ for disaster recovery.
+****-->rds can be changed from single az to multi az , by just clicking modify for the DB.
+*** snapshot of db is taken and restored in the standby db. then synchronization is established between 2 databases.
+
+Amazon Aurora:
+-->its is proprietary technology from aws(not open sourced)
+-->postgres and mysql are both supported by aurora
+-->it is cloud optimized i.e works better on cloud 5X of mysql and 3X of postgres.
+-->aurora storage automatillacy increases by 10gb upto 128tb
+-->can have upto 15 read replicas with autoscaling.
+--> failover of aurora is instantaneous
+-->cost 20% more than other db engines
+-->on read replicas we have reader endpoint which can balance load between read replicas
+Features of aurora:
+-->automatic failover
+-->backup and recovery
+-->isolation and security
+-->industry compliance
+-->advanced monitoring
+-->routine maintenance
+***-->backtrack: restores data at any point of time without using backups
+
+
+
+
+
+
+
+
+
+
+
+
