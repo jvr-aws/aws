@@ -1,0 +1,116 @@
+Containers
+
+Docker:it is a software development platform to deploy applications
+-->apps are packed in containers that can run on any OS
+-->apps run the same regardless of where they run
+   -any machine  -no compatible issues -less work - easy to maintain and deploy  - work with any os, language and technology
+
+---> used cases -microservice architecture,lift and shape apps from on premises to aws cloud
+
+Where are docker images stored:
+1)in Docker repositories
+2)Docker hub(public repos and you can find base images for many technologies)
+3)Amazon ECR(Amazon Elastic Container Registry)
+--both private and public repositories
+
+difference between Docker and virtual machine?
+--->Docker containers share the host OS kernel, which reduces overhead. Containers can start and stop quickly, as they don't need to boot an entire OS.
+
+***Virtual machines, on the other hand, require more resources because each VM includes a complete OS with its own kernel. This results in higher resource consumption and longer startup times.
+
+--->docker  daemon in Containers and hypervisor in VMs 
+
+look into architecture image of docker and VM
+
+
+how to create a container:
+1)write a docker file (it has base docker image and few files) 
+2)built it (docker file becomes an docker image)
+3)push image to a docker repository(docker hub or amazon ecr)
+4)you can pull the image from the docker container or use the docker image you have and then Run it.
+--> when you run a docker image it becomes a docker container which runs your code which you built on Docker build.
+
+Tools in amazon to manage Docker containers:
+1) Amazon Elastic Container service(Amazon ECS)
+2)Amazon Elastic Kubernetes Service(Amazon EKS)
+3)AWS Fargate 
+
+1) AMAZON ECS(Elastic Container Service) - EC2 Launch type
+
+--> launcing docker containers on aws means that you are launching ECS tasks on ECS clusters.
+Keywords and Definitions:
+
+1.Clusters:
+A cluster is a logical grouping of EC2 instances on which you can run containerized applications. ECS uses clusters to manage and schedule tasks.
+
+2. Container Instances:
+Container instances are EC2 instances that are part of an ECS cluster. These instances run the ECS Container Agent, which is responsible for registering the instance with the ECS cluster and managing tasks.
+
+3. Tasks:
+A task is the basic unit of work in ECS. It defines a set of containers (Docker images) that run together on the same host. Tasks can consist of 
+one or more containers, and they share the same network namespace.
+
+4. Task Definitions:
+A task definition is a JSON or YAML file that describes how a set of containers should be launched as part of a task. It includes information such as Docker images, CPU and memory requirements, networking information, and data volumes.
+
+5. Services:
+A service in ECS allows you to define how many copies of a task should run and maintain the desired number of tasks in a specified state (running or pending). Services ensure that tasks are always running, and they can automatically recover failed tasks.
+
+--> ECS helps to create a cluster
+--> clusters is the place where your containers run . i.e you give a cluster image to the ecs and it runs the image in the form of container.
+--> to give an image to the cluster i.e to tell ecs about container image you will create something called container definition.
+** container definition tells ecs where container image is and how you run the container image(i.e which port your container uses)
+*** task definition store resources(cpu and memory) used by the task,networking mode , compatibility(ec2 mode or fargate) and more importantly Task role.
+****task role is assigned to task by which task gains permissions to access aws resouces.
+
+--> Service definition : it defines how we want to scale the task i.e how many copies to tasks need to run and you can also assign load balancer to distributre the load across multiple tasks.
+
+--> so we deploy tasks or services into the ecs cluster 
+
+
+launching containers in ecs:
+
+1)amazon ecs -ec2 launch type:
+-->the ec2 instances run the ECS Container Agent, which is responsible for registering the instance with the ECS cluster and managing tasks.
+-->you provision and maintain the infrastructure i.e you maintian ec2 instances
+-->aws takes care of starting and stopping the containers
+
+2)amazon ecs - Fargate launch type:
+-->launch docker containers on aws
+-->you do not provision and maintain the infrastructure i.e no ec2 instances
+--> it is serverless
+-->we only create task definitions
+--> aws runs these tasks for you based of cpu/ram you need
+--> to scale , increase no of tasks.
+
+
+
+--- for both type launchs you can assign ECS task role which allows you to have a specific role to each task
+---you can use load balancer for both launch types.
+
+Kubernetes:
+
+Kubernetes, also known as K8s, is an open-source system for automating deployment, scaling, and management of containerized applications
+
+1. Nodes:
+Nodes are the individual servers (physical or virtual) that make up the cluster and this is where the containers are run. 
+-->Each node runs the necessary components to manage containers and communicate with the control plane(kubernetes api and kubelet).
+--> nodes also have containered or docker software for handling container operations.
+
+2. Control Plane (Master):
+The control plane is the set of components that manage the overall state of the cluster. 
+
+3. Kubelet:
+The kubelet is an agent that runs on each worker node , It communicates with the control plane components and manages containers on the node.
+
+Amazon EKS(Amazon Elastic Kubernetes Service):
+
+Amazon Elastic Kubernetes Service (Amazon EKS) is a fully-managed, Kubernetes implementation that simplifies the process of building, securing, operating, and maintaining Kubernetes clusters on AWS.
+
+--> aws managed and open source
+--> control panel scales and runs on multiple AZs
+-->integrated with aws resources -ECR,ELB,IAM,VPC
+-->eks cluster = eks control panel + eks nodes
+-->storage providers - EBS,EFS,FSx LUSTRE.
+
+

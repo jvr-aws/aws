@@ -3,6 +3,11 @@ Relational database:
 Amazon RDS (Relational Database Service) is a fully managed database service provided by Amazon Web Services (AWS).
 
 -->It simplifies the process of setting up, operating, and scaling relational databases in the cloud.
+**--> database cloning: db can be cloned  and it uses copy-on-write protocol so it is way faster than snapshot and restore.
+
+**--> you can use rds proxy which allows apps to pool and share db connections established with the database
+**--> proxy bd is serverless,autoscaling and highly available(mutli az).
+
 -->Uses sql as querry language
 --> DB engines maintained by AWS
     postgres
@@ -58,6 +63,7 @@ Amazon Aurora:
 --> failover of aurora is instantaneous
 -->cost 20% more than other db engines
 -->on read replicas we have reader endpoint which can balance load between read replicas
+
 Features of aurora:
 -->automatic failover
 -->backup and recovery
@@ -67,9 +73,75 @@ Features of aurora:
 -->routine maintenance
 ***-->backtrack: restores data at any point of time without using backups
 
+Aurora backups:
+Automated backups:
+-->1 to 35 days (cannit be disabled)
+-->ability to restore to a point
+Manual backups: 
+--> manually triggered by users
+-->retention as long as user wants.
 
 
+RDS backups:
+Automated backups:
+-->daily full backup
+-->transaction logs are backed every 5min.
+-->ability to restore to a point 
+-->1 to 35 days of retention,set 0 to disable auto backups
+Manual backups: 
+--> manually triggered by users
+-->retention as long as user wants.
 
+note: in a stopped rds database , you would pay for the storage.
+and if you plan to stop it for a long time, take a snap shot and restore instead.
+
+RDS AND AURORA RESTORE OPTIONS:both backups create a new database when recovered
+--> create a backup of your database (using percona xtraBackup in MYSQL Aurora)
+-->store it in s3 
+-->restore it into a new RDS instance running databases engines(mysql or aurora)
+
+RDS AND AURORA SECURITY :
+--> at rest encryption
+-->In-flight encryption
+-->IAM authentication: IAM role to connect
+-->security groups
+--> no ssh available(except for rds custom)
+-->audit logs can be sent oto cloudwatch
+
+
+Amazon elastic cache:
+--> Elastic cache is to get managed redis or memcached
+-->caches are in memory databases with high performance and low latency.
+-->helps reduce load off the databases 
+--> using elastiCache involves heavy application code changes.
+ //look into redis vs Memcached?????///
+
+
+Important ports:
+
+FTP: 21
+
+SSH: 22
+
+SFTP: 22 (same as SSH)
+
+HTTP: 80
+
+HTTPS: 443
+
+vs RDS Databases ports:
+
+PostgreSQL: 5432
+
+MySQL: 3306
+
+Oracle RDS: 1521
+
+MSSQL Server: 1433
+
+MariaDB: 3306 (same as MySQL)
+
+Aurora: 5432 (if PostgreSQL compatible) or 3306 (if MySQL compatible)
 
 
 

@@ -1,0 +1,17 @@
+CloudFormation:
+
+CloudFormation defines logical resources within templates (using YAML or JSON). The logical resource defines the WHAT, and leaves the HOW up to the CFN product. A CFN stack creates a physical resource for every logical resource - updating or deleting them as a template changes.
+
+--> it starts with a template- yaml or json
+--> contains logical resources -"what you want to create/what resources you want"
+-->Templates are used to create Stacks
+-->stack creates physical resource from the logic.
+--> if stacks template is changed - physical resources are changes 
+--> if stack is deleted- physiscal resources are deleted
+-->A stack is a set of AWS resources created and managed as a single unit. When you run a CloudFormation template, it creates a stack. 
+
+Parameters:
+Template and Pseudo Parameters are two methods to provide input to a template, which can influence what resources are provisioned, and the configuration of those resources.
+
+parameters are defined in templated and can accept input.
+parameters can be configured with Defaults,allowed values, min and max lengths allowed patterns ,no echo and type
