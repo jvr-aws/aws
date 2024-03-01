@@ -1,0 +1,117 @@
+SNS_SQS_KINESIS:
+
+SNS (Simple Notification Service):
+--> it is a public aws service i.e you can coonect with it via public endpoint
+-->cordinates the sending and delivery of messages(upto 256kb)
+-->A topic is an access point for allowing recipients to dynamically subscribe to receive messages or notifications.
+--> Publishers send messages to topics, and subscribers receive messages sent to topics to which they have subscribed.
+ --> subscribers can recieve message via transport protocols (such as HTTP/HTTPS, Email/Email-JSON, Amazon SQS, AWS Lambda, and more).
+
+--> and for these messages you can add filters so that the subscriber recieves only relevent information.
+
+SNS offers:
+1) delivery status
+2)delivery retry(if delivery failed)
+3)Highly available and scalable
+4)Server side encryption -capable
+5)cross-account via topic policies
+
+SQS(Simple queue Service):
+Amazon Simple Queue Service (SQS) is a fully managed message queuing service , it enables decoupling of the components of a cloud application, it allows for asynchronous communication between different parts of the system.
+
+--> it is public , fully managed and HA 
+--> queues can be standard or FIFO
+-->messages can be upto 256kb
+--> When a consumer retrieves a message from a queue, the message becomes "invisible" to other consumers for a configurable period known as the visibility timeout.
+--> If consumer doesnot explicitly delete the message , then the message reappears.
+-->A dead-letter queue is a separate queue that collects messages that cannot be processed successfully after a certain number of retries
+
+--> IN SQS THERE IS 1 PRODUCTION GROUP AND ONE CONSUMPTION GROUP.
+-->IN SNS YOU HAVE ONE PUBLISHER AND MANY SUBSCRIBERS.
+
+SQS arxhitecture:
+auto scalinf group pools,
+
+--> there are 2 pools like web app pool and worker pool
+--> user uploads an video to the web app pool and it stores the video in the s3 bucket.
+--> an message is added to the sqs queue with a link to the video in s3 bucket
+--> the two pools are connected to asg. web app pool increses when load increases and worker pool scales out when there are more messages in sqs que
+--> instances in worker pool recieve the messages
+-->the worker pool processes that video ex: generating different sizw of this video and store them in a different bucket, then message on the que is deleted
+--> so here it decoupled the components of this application and allowed each of them to scale independently
+
+generally it can be done with sns and sqs fanout:
+--> intially msg is sent to sns and then to different sqs connected to different worker pools. and after processing messages are explicitly deleted
+--> fan out design is used to create multiple events when an object is stored in s3 bucket (usually 1 event per object).
+-->Fanout is a design pattern where a message or event is broadcasted to multiple consumers or subscribers.
+-->This allows you to broadcast a message to multiple SQS queues, each of which has its own set of subscribers
+ 
+
+standard queues give at least one delivery fifo give exactly one delivery
+fifo can send 3000 messages while batching and 300 persecond without batching
+you will be billed based on requests
+1 request is basically 1 to 10 messages
+messages can be encrypted 
+
+KINESIS:
+ Kinesis enables you to ingest, process, and analyze large volumes of streaming data in real-time.
+--> it has producers and consumers too
+
+-->Streams is the core service that allows you to ingest and process real-time streaming data. each stream can have multiple shards based on the requirement.
+
+-->SHARD: Each shard can ingest up to 1,000 records per second and provides a maximum total data transfer rate of 1 MB per second.
+
+--> record:A record is a unit of data in a Kinesis stream
+
+--> producers send data to streams 
+--> streams store a 24 hour moving window of data
+--> can be increased to 365 days 
+--> multiple consumers can access data from the moving window.
+
+Kinesis Firehose:
+Amazon Kinesis Firehose is a fully managed service that simplifies the process of loading streaming data into AWS data stores and analytics services.
+--auto scaling and serverless
+--near real time delivery(~60 seconds)
+--supports transformation of data on the fly(lambda)
+--billed - as volumes passed through firehose
+
+
+firehose can deliver data to (imp for exam )
+1) http end points
+2) splunk
+3)redshift
+4)elastic search
+5)s3 bucket 
+
+integrate kinesis with kinesis firehose for store the stream data
+firehose wait for 1mb of data (buffers) and then stores it in destination , so it is not real time , it is near real time because it takes time nearly 60 seconds to store the data
+
+forehose can transform data passing through it via lambda and it can add latency to the product.
+
+firehose can deliver data to the storages but to data to redShift
+1st you need to store the data in an s3 bucket and then make a copy of the data to the redShift
+
+Amazon Kinesis Data Analytics:
+Amazon Kinesis Analytics allows you to run SQL queries on streaming data. It provides a way to analyze and gain insights from the data within the stream in real-time.
+
+Key Features:
+-->Use SQL queries to filter, aggregate, and analyze streaming data.
+
+-->Integrates with Kinesis Streams and Kinesis Firehose.
+
+-->Supports real-time analytics on the streaming data.
+
+Kinesis Data Analytics can send data to:
+-->Firehose
+-->AWS lambda
+-->Kinesis data streams
+note: Kinesis Data Analytics is real time service but if you send data to firehose it wont be real time anymore because firehose is near real time.
+
+you use Kinesis Data Analytics in places where:
+1) stream data need real time dql processing
+2)time - series analutics are required like - elections / e-sports
+3)real time dashboards - leaderboard for games
+4)real time metrices are required like security and responce teams
+
+
+
