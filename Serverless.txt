@@ -1,0 +1,35 @@
+serverless :Lambda, API Gateway, DynamoDB, and Cognito work
+
+A list of serverless functions in aws:
+lambda,dynamo db , cognito , api gateway , s3 , sns,sqs,kinesis data firehose
+aurora serverless , step functions , FArgate (ECS)
+
+The SA exam is pretty lightweight on the details on Serverless services.
+*****************************************************************************************************************************************************************************
+
+LAMBDA: AWS Lambda is a serverless computing service provided by AWS
+
+-->It allows you to run code without provisioning or managing servers, paying only for the compute time consumed by your function.
+
+briefly:
+--> virtual functions - no server to be managed
+-->limited bytime - short executions(15min generally)
+-->run in demand(when not used lambda wont run)
+--> scaling is automated
+-->pay per request and compute time
+-->can be integrated with whole aws services
+-->easyly monitored by cloudwatch
+-->increasing RAM also improves CPU and network
+-->languages supported : nodejs ,python , java(java 8) , c# , golang , Ruby ,custom runtime api
+-->(my understanding): we create functions in lambda which are nothing but a logical code and these functions are triggered by various aws resources.
+
+(look into it)--> lambda container images:
+     -> the container image must implement lambda runtime API
+     ->ecs/fargate is preferred for running Arbitrary Docker Images
+
+ --> Lambda SnapStart: improves your Lambda function performance upto 10X for java 11 and above with no extra cost
+
+
+STUDY whole section 20 on UDEMY and make notes here
+
+

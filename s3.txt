@@ -65,7 +65,7 @@ Example endpoint: http://your-bucket-name.s3-website-your-region.amazonaws.com
 
 
 S3 Versioning:
- Amazon S3 (Simple Storage Service) versioning is a feature that allows you to keep multiple versions of an object in a bucket. When versioning is enabled for an S3 bucket, each time you upload a new version of an object with the same key (object name), S3 automatically archives the previous version, allowing you to maintain a complete history of changes to your objects.
+ Amazon S3 (Simple Storage Service) versioning is a feature that allows you to keep multiple versions of an object in a bucket. When versioning is enabled for an S3 bucket, each time you upload a new version of an object with the same key (object name), S3 automatically archives the previous version, allowing you to maintain a complete history of changes to your objects.when you delete a version by enabling show version it is called permanent delete.if you delete a object without selecging the version then a delete marker is added. if you delete the marker you will get the object back.
 
 1)Versioning in MFA Delete Mode:
 You can enable MFA (Multi-Factor Authentication) delete mode for an S3 bucket, which adds an extra layer of security for deleting versions of objects.
@@ -73,7 +73,7 @@ You can enable MFA (Multi-Factor Authentication) delete mode for an S3 bucket, w
 2)Versioning Impact on Storage Costs:
 Enabling versioning can impact your storage costs because each version of an object is stored separately. However, it provides data durability and the ability to recover from accidental deletions or modifications.
 
-3)Cross-Region Replication with Versioning:
+3)Cross-Region Replication with Versioning:(imp -note that versioning has to be enabled ON BOTH BUCKETS for SSR OR CRR)
 If you enable versioning on a source bucket and replicate it to a destination bucket in a different region, the versioning information is also replicated.
 
 ----->s3 performance optimization:
@@ -225,11 +225,14 @@ Characteristics:
 Low-cost storage with delayed retrieval.
 Designed for durability of 99.999999999% (11 9's).
 
+S3 Glacier FELXIBLE RETRIEVAL: EXPEDITED(1TO5 MINUTES) , STANDARD(3-5HRS),BULK(5-12 HRS)
+
 6. Glacier Deep Archive:
 Description: Lowest-cost storage option for long-term archival with the longest retrieval times.
 Characteristics:
 Very low-cost storage.
 Designed for durability of 99.999999999% (11 9's).
+-->> STANDARD(12HRS),BULK(48HRS)
 
 --->bucket keys:
  When you use SSE-KMS to protect your data without an S3 Bucket Key, Amazon S3 uses an individual AWS KMS data key for every object.

@@ -1,7 +1,8 @@
 SNS_SQS_KINESIS:
 
 SNS (Simple Notification Service):
---> it is a public aws service i.e you can coonect with it via public endpoint
+***publisher-topic-subscriber
+--> it is a public aws service i.e you can connect with it via public endpoint
 -->cordinates the sending and delivery of messages(upto 256kb)
 -->A topic is an access point for allowing recipients to dynamically subscribe to receive messages or notifications.
 --> Publishers send messages to topics, and subscribers receive messages sent to topics to which they have subscribed.
@@ -17,17 +18,18 @@ SNS offers:
 5)cross-account via topic policies
 
 SQS(Simple queue Service):
+***PRODUCER - CONSUMER
 Amazon Simple Queue Service (SQS) is a fully managed message queuing service , it enables decoupling of the components of a cloud application, it allows for asynchronous communication between different parts of the system.
 
---> it is public , fully managed and HA 
+--> it is public , fully managed and HA(highly available) .
 --> queues can be standard or FIFO
 -->messages can be upto 256kb
 --> When a consumer retrieves a message from a queue, the message becomes "invisible" to other consumers for a configurable period known as the visibility timeout.
---> If consumer doesnot explicitly delete the message , then the message reappears.
+*--> If consumer doesnot explicitly delete the message , then the message reappears.
 -->A dead-letter queue is a separate queue that collects messages that cannot be processed successfully after a certain number of retries
 
---> IN SQS THERE IS 1 PRODUCTION GROUP AND ONE CONSUMPTION GROUP.
--->IN SNS YOU HAVE ONE PUBLISHER AND MANY SUBSCRIBERS.
+***--> IN SQS THERE IS 1 PRODUCTION GROUP AND ONE CONSUMPTION GROUP.
+***-->IN SNS YOU HAVE ONE PUBLISHER AND MANY SUBSCRIBERS.
 
 SQS arxhitecture:
 auto scalinf group pools,
@@ -45,9 +47,14 @@ generally it can be done with sns and sqs fanout:
 --> fan out design is used to create multiple events when an object is stored in s3 bucket (usually 1 event per object).
 -->Fanout is a design pattern where a message or event is broadcasted to multiple consumers or subscribers.
 -->This allows you to broadcast a message to multiple SQS queues, each of which has its own set of subscribers
+
+SQS LONGPOLLING:
+when a consumer requests messages from the queue, then it can wait for messages to arrive if there are none in the queue.this is called long polling
+--> it decreases the no of API calls made to the sqs
+-->inc efficiency and wait time is btw 1 to 20 sec.
  
 
-standard queues give at least one delivery fifo give exactly one delivery
+-->standard queues give at least one delivery fifo give exactly one delivery.
 fifo can send 3000 messages while batching and 300 persecond without batching
 you will be billed based on requests
 1 request is basically 1 to 10 messages
@@ -108,8 +115,8 @@ Kinesis Data Analytics can send data to:
 note: Kinesis Data Analytics is real time service but if you send data to firehose it wont be real time anymore because firehose is near real time.
 
 you use Kinesis Data Analytics in places where:
-1) stream data need real time dql processing
-2)time - series analutics are required like - elections / e-sports
+1) stream data need real time sql processing
+2)time - series analytics are required like - elections / e-sports
 3)real time dashboards - leaderboard for games
 4)real time metrices are required like security and responce teams
 

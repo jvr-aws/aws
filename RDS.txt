@@ -61,8 +61,20 @@ Amazon Aurora:
 -->aurora storage automatillacy increases by 10gb upto 128tb
 -->can have upto 15 read replicas with autoscaling.
 --> failover of aurora is instantaneous
+--> primary database instance becomes unavailable due to hardware failure, software failure, or scheduled maintenance so recovering from it is failover.
 -->cost 20% more than other db engines
--->on read replicas we have reader endpoint which can balance load between read replicas
+-->on read replicas we have reader endpoint which can balance load between read replicas.
+
+we have aurora seerverless 
+-->automated database infrastructure
+-->auto scale
+-->good for infrequent and unpredictable workloads
+-->no capacity planning needed.
+
+we also have aurora global:
+-->enables cross region read replicas(useful for disaster recovery)
+-->aurora global database -1 primary region and upto 5 secondary regions
+-->16 read replicas per secondary region
 
 Features of aurora:
 -->automatic failover
@@ -75,7 +87,7 @@ Features of aurora:
 
 Aurora backups:
 Automated backups:
--->1 to 35 days (cannit be disabled)
+-->1 to 35 days of retention (cannot be disabled)
 -->ability to restore to a point
 Manual backups: 
 --> manually triggered by users
@@ -95,10 +107,18 @@ Manual backups:
 note: in a stopped rds database , you would pay for the storage.
 and if you plan to stop it for a long time, take a snap shot and restore instead.
 
-RDS AND AURORA RESTORE OPTIONS:both backups create a new database when recovered
+RDS AND AURORA RESTORE OPTIONS:both backups create a new database when recovered.
 --> create a backup of your database (using percona xtraBackup in MYSQL Aurora)
 -->store it in s3 
 -->restore it into a new RDS instance running databases engines(mysql or aurora)
+
+RDS proxy:
+RDS Proxy maintains a pool of database connections, which helps in managing and reusing connections from the application to the database. 
+-->proxy allows applications to pool and share db connections.
+--> db has 100 connections proxy takes 50 and db takes 50.
+-->improves efficiency
+-->serverless,autoscale,high availability(mutli az)
+--> no code change required
 
 RDS AND AURORA SECURITY :
 --> at rest encryption
@@ -106,15 +126,19 @@ RDS AND AURORA SECURITY :
 -->IAM authentication: IAM role to connect
 -->security groups
 --> no ssh available(except for rds custom)
--->audit logs can be sent oto cloudwatch
+-->audit logs can be sent to cloudwatch
 
 
 Amazon elastic cache:
---> Elastic cache is to get managed redis or memcached
+--> Amazon ElastiCache is a fully managed, in-memory caching service provided by Amazon Web Services (AWS)
+-->ElastiCache supports two widely used caching engines: Redis and Memcached
 -->caches are in memory databases with high performance and low latency.
 -->helps reduce load off the databases 
 --> using elastiCache involves heavy application code changes.
- //look into redis vs Memcached?????///
+-->lazy loading : all read data is cached, data becomes st
+-->prefer redis over memcached bcz-multiaz with auto failure,read replicas,backup and restore features , AOF persistent,supports set and sorted sets.
+
+memcached uses SASL based authentication (buttify)
 
 
 Important ports:

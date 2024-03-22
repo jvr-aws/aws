@@ -15,7 +15,7 @@ The hypervisor is a software component that manages multiple virtual machines in
 
 Type 1 hypervisor
 A type 1 hypervisor, or bare-metal hypervisor, is a hypervisor program installed directly on the computer’s hardware instead of the operating system. Therefore, type 1 hypervisors have better performance and are commonly used by enterprise applications. KVM uses the type 1 hypervisor to host multiple virtual machines on the Linux operating system.
-
+ 
 Type 2 hypervisor
 Also known as a hosted hypervisor, the type 2 hypervisor is installed on an operating system. Type 2 hypervisors are suitable for end-user computing.
 
@@ -146,9 +146,26 @@ Volumes that you create from an unencrypted snapshot that you own or have access
 When you copy an unencrypted snapshot that you own, you can encrypt it during the copy process.
 
 
+ec2 instance purchasing options:
 
+1)On-Demand Instances:
 
+With On-Demand Instances, you pay for compute capacity by the hour or by the second with no long-term commitments.
 
+2)Reserved Instances (RIs):
+
+Reserved Instances provide a significant discount (compared to On-Demand pricing) in exchange for committing to a one- or three-year term. 
+--> upto 72% discount compared to on demand
+
+There are different types of RIs, such as Standard RIs, Convertible RIs, and Scheduled RIs, each offering different flexibility and discount options.
+
+3)Spot Instances:
+
+Spot Instances allow you to bid for unused EC2 capacity in the AWS cloud, often at significantly lower prices than On-Demand instances. However, AWS can terminate Spot Instances with little notice if the Spot price exceeds your bid or if the capacity is needed by On-Demand or Reserved Instances.
+-->upto 90 % discount 
+
+4)Dedicated Hosts:
+Dedicated Hosts are physical servers with EC2 instance capacity fully dedicated for your use. They can help you address compliance requirements and reduce costs by allowing you to use your existing server-bound software licenses. 
 
 
 

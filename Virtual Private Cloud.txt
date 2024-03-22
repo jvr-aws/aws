@@ -84,7 +84,6 @@ Amazon VPC (Virtual Private Cloud) Fundamentals
 If the subnet has internet access then it is called PublicSubnet.
 If the subnet doesn’t have internet access then it is called PrivateSubnet.
 A subnet must reside entirely within one Availability Zone. 
-An entire subnet must be contained within a single Availability Zone.
 Access between instances is managed by VPC Security Groups for both inbound and outgoing traffic (EC2 Security Groups can only define inbound rules).
 We can specify Subnet IP Routing with the aid of the Route Table.
 If a server/instance which is in a private subnet wants to reach the internet then it must have NAT in a public subnet.
@@ -105,5 +104,89 @@ Disadvantages of CIDR: Complexity,Compatibility issues
 Overall, CIDR is a useful and efficient method of IP address allocation and routing.
 
 VPC peering can establish the connection between two Virtual Private Clouds which enables you to route the traffic between two VPCs using the IP address. 
+it can connect vpc in differernt regions and accounts
 
 
+What is Bastion Host?
+A Bastion host is a special-purpose server or an instance that is used to configure to work against the attacks or threats. It is also known as the ‘jump box’ that acts like a proxy server and allows the client machines to connect to the remote server.
+
+NAT INSTANCE
+A NAT instance provides network address translation (NAT). You can use a NAT instance to allow resources in a private subnet to communicate with destinations outside the virtual private cloud (VPC), such as the internet or an on-premises network.
+
+The NAT instance must have internet access, 
+-->so it must be in a public subnet 
+-->it should have an elastic ip
+--> route table in private subnet must be configured to route traffic to route table.
+
+
+To get started with NAT instances, create a NAT AMI, create a security group for the NAT instance, and launch the NAT instance into your VPC.
+
+NAT GATEWAY:
+-->NAT Gateways allow instances in private subnets to communicate with the internet, AWS services, or external endpoints,
+-->NAT Gateways have their own public IP addresses and are managed by AWS, so you don't need to configure or manage the underlying infrastructure.
+-->NAT Gateways can automatically scale up to handle higher traffic volumes
+-->NAT instances and gateways both are bound to the availability zone.
+
+Vpc endpoints:
+Amazon Virtual Private Cloud (VPC) endpoints allow you to privately connect your VPC to supported AWS services and endpoints without requiring internet gateways, NAT devices, VPN connections, or direct peering
+
+-->These are powered by AWS PrivateLink and provide private connectivity to AWS services 
+
+TYPES OF ENDPOINTS
+1)Gateway Endpoints: These allow you to privately connect your VPC to Amazon S3 and DynamoDB . cost is free
+
+2)Interface Endpoints: These are powered by AWS PrivateLink and provide private connectivity via Elastic Network Interfaces (ENIs). Examples include Amazon EC2, Amazon SNS, and Amazon SQS.
+
+3)Gateway Load Balancer Endpoints: These endpoints allow you to privately connect your VPC to Network Load Balancers (NLBs) within your VPC.
+
+VPC FLOW LOGS:
+VPC Flow Logs is a feature provided by Amazon Web Services (AWS) that allows you to capture information about the IP traffic going to and from network interfaces in your Virtual Private Cloud (VPC). 
+
+A Direct Connect Gateway is an AWS networking feature that enables you to connect multiple Virtual Private Clouds (VPCs) distributed across different AWS Regions to your on-premises network via AWS Direct Connect.
+--> dedicated direct connect - 1 to 10 gbps speed
+-->hosted direct connect - 50mbps,500mbps, upto 10gbps
+
+An AWS Transit Gateway is a highly scalable and centralized hub that enables you to connect multiple Virtual Private Clouds (VPCs), on-premises networks, and AWS Direct Connect gateways, making it easier to build and manage large-scale networks in the cloud. 
+
+Transit Gateway is suitable for connecting multiple VPCs and on-premises networks within and across different AWS Regions, supporting transitive routing and hub-and-spoke topology. Direct Connect Gateway, on the other hand, is designed specifically for connecting multiple VPCs within the same AWS Region to an on-premises network via AWS Direct Connect, without supporting transitive routing.
+note : it supports ip multicast (buttify)
+
+Transitive Routing:
+
+Transit Gateway: Supports transitive routing, allowing traffic to flow between connected VPCs and on-premises networks without additional peering connections. It simplifies network design and enhances connectivity between distributed resources.
+Direct Connect Gateway: Does not support transitive routing. Traffic between VPCs connected via Direct Connect Gateway must traverse your on-premises network to reach each other.
+
+
+****aws site to site gateway:
+It is a vpn connection so it travels in public internet but encrypted.
+
+we need the following to establist s2sVPN connection:
+1)virtual private gateway(VGW)at vpc
+2)Customer gateway at datacenters(customer)
+3)set up route tables for traffic flow.
+
+***AWS Direct Connect
+AWS Direct Connect provides a dedicated, private connection between an on-premises data center, office, or colocation facility and AWS.
+--> flexible bandwidth options ranging from 50 Mbps to 100 Gbps,
+--> can access public(s3) and private(ec2) aws resources
+--> its a private connection
+
+Direct connect gateway:
+Direct Connect Gateway allows you to connect multiple Virtual Private Clouds (VPCs) within the same AWS Region to your on-premises network via a single Direct Connect connection.
+
+1)dedicated direct connect: 1,10,100gbps speed
+-->physical ethernet port dedicated to customer
+-->request is made to aws first and then completed by aws direct connect partners
+
+2)hosted direct connection:50,500mbps upto 10 gbps speed
+-->requests are made via aws direct connect partners
+both connections take 1 month to establish
+
+Direct Connect provides a dedicated, private connection between your on-premises network and AWS, while Direct Connect Gateway allows you to connect multiple VPCs within the same AWS Region to your on-premises network via a single Direct Connect connection, facilitating hub-and-spoke connectivity and transit routing.
+
+direct connect is not encrypted but private.
+to make it encrypted you can use aws direct connect + vpn .
+you can set up a backup connection to the direct connection via a direct connect(expensive) and site to site vpn connection(cheap)
+
+Q)Which AWS service allows you to protect and control traffic in your VPC from layer 3 to layer 7?
+A) aws network firewall

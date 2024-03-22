@@ -1,0 +1,154 @@
+ELB&ASG
+
+tiers in an application:
+1)web tier : application load balancer or API gateway
+2)compute tier : ec2 , lambda ,or containers
+3)storage  : EBS,EFS,s3   or caching : Elastic cache ,dynamo db accelerator(DAX) when using dynamo db
+4) DB tier : RDS , aurora , dynamo db , redshift
+
+when it comes to data storage we can use storage resources or db resources
+and when using db resources it is encouraged to use caching for improved performance and also caching is cheap so it reduces cost.
+
+aws has resources which are designed to provide application services 
+like :
+5) App services : SQS,SNS,Kinesis,Step Functions
+
+
+//Elastic Load Balancer :
+Elastic Load Balancing (ELB) service  distributes incoming application traffic across multiple targets, such as Amazon EC2 instances, containers, and IP addresses, within one or more availability zones.
+-->ELB helps enhance the availability and fault tolerance of your application.
+
+//Elastic load balancer ARCHITECTURE:
+
+--> At the core of ELB architecture is the Load Balancer itself, which acts as a single point of contact for clients.
+-->elb is configured to run in multiple AZs and it places nodes into a subnet of each AZ.(one subnet in each AZ only)
+--> elb is created with only 1 record("A" record) which points towards that nodes
+--> if elb is facing internet nodes have public or private ips,if elb is internal it has only private ips
+-->load balances need 8 free ip addresses to function so subnet size for load balacer can a min of /28.(in aws docs /27 is given so stick to this in the exam).
+--> internal load balancer can be used for scaling between application tiers(computer tier)
+
+*****************************************
+
+-->Each Load Balancer has one or more listeners that check for connection requests from clients. Listeners are configured with a protocol and a port number.
+--> rules are used to route traffic which arrive at listner based on various criteria, such as the content of the request, the path, or the host.
+--> the rules can perform actions like forward,redirect,fixed response to the incoming requests.ex forward traffic to Target groups
+-->Target Groups are used by ALB and NLB to route requests to registered targets (e.g., EC2 instances, IP addresses, or containers).
+Targets within a target group can span multiple Availability Zones.
+
+
+//ELBS are split between version1 and version 2 (most prefered are version 2)
+
+There are 3 types of ELBS:
+
+1)Classic Load Balancer (CLB):
+--> it is v1
+-->Supports both HTTP and HTTPS protocols but it doesnot operate on layer 7
+-->it needs 1 SSL per CLB.(SSL, or Secure Sockets Layer,A website that implements SSL/TLS has "HTTPS" in its URL instead of "HTTP.").
+
+
+2)Application Load Balancer (ALB):
+-->v2 , they support http/https and websocket protocols and cannot understand any other protocols.
+-->Operates at the application layer (Layer 7) and allows you to route traffic based on content.
+-->Supports multiple ports on the same instance, 
+*-->host-based routing, and path-based routing.
+-->Ideal for modern web applications with multiple services or microservices.
+--> health checks can evaluate application health on layer 7.
+
+
+3)Network Load Balancer (NLB):
+-->Operates at the transport layer (Layer 4) 
+-->It is designed for high-performance, low-latency traffic.
+-->Supports TCP, UDP, and TLS/SSL protocols.
+-->doesnt understand http and https 
+-->cannot interpret headers,cookies and no sticky sessions.
+*-->Ideal for applications that require static IP addresses or that handle a large number of requests.
+**-->NLB and tcp listeners used together can be used to unbroken end to end encryption.
+
+//Cross-Zone Load Balancing:
+Cross-Zone Load Balancing is a feature that allows the load balancer to evenly distribute traffic across instances in all enabled Availability Zones.
+it is not enabled by default but if you are using ALB then this feature is enabled by default.
+**************************************************************************************************
+
+Launch Configurations and launch templates:
+
+LC AND LT:
+--> they both allow you to define the configuration of ec2 instances in advance in an ASG
+--> like instance type,storage,keypair
+--> networking and security groups
+--> userdata and iam role
+--> both are not editable - defined once . LT has versions
+LT provides new features compared to LC
+--> launch templates can also be used to launch  ec2 instance directly.
+************************************************************************************************************
+
+AUTO SCALING GROUPS(ASG)
+
+--> They allow you to automatically adjust the number of EC2 instances in your application based on the demand or other specified conditions. 
+
+-->automatic scaling and self healing for ec2
+--> self healing:If an instance fails a health check, it may be terminated and replaced to maintain the desired capacity. 
+-->uses launch template or cinfigurations
+-->it has minimum , desired and maximum size
+--> it keeps running instnaces at desired capacity
+-->Scaling policies define when and how the Auto Scaling Group should scale in or out.
+
+--> ASG can be integrated with load balancer
+--> ASG can use Load balancer health checks rather than ec2 health checks
+-->it can accept alarm notifications from Cloud Watch
+--> AZ rebalance - balances instances evenly across all of the az's
+--> replace unhealthy
+-->Scheduled action : shedule ON or OFF
+--> Standby: can make instances "in service/standby" 
+
+SCALING POLICIES:
+
+imp note: A cooldown period is the time Auto Scaling waits before launching or terminating additional instances.
+
+1)Manual Scaling: manually adjusted to desired capacity
+
+2)Scheduled Scaling : time based adjustment(scaling is done when we know that there will be excess load)
+
+3)Dynamic scaling : 
+  --> Simple scaling: Based on a single, specified metric.
+        ex: cpu utilization, length of sqs queue
+  
+  --> Stepped scaling: Scales the Auto Scaling Group based on the size of the alarm breach.
+       
+  --> target tracking :Desired aggregate CPU =40% ASG handles it
+       it tracks the cpu utilization and maintains at desired value
+
+Points to be noted:
+--> ASG is free
+--> resources are billed
+-->use cool down to avoid rapid scaling
+-->use more,smaller instances than less,bigger instances
+-->ASG defines when and where to launch /LT defines what to launch
+--> ASG can have zero scaling policies
+
+ASG LIFE CYCLE HOOKS:
+
+-->Lifecycle hooks enable you to perform custom actions during specific lifecycle events, such as before an instance is launched or terminated.
+--> during launch and terminate instances can be in a wait state to perform some actions
+
+usually while launching an instance : SCALE OUT -> pending -> Inservice
+by  using lifecycle hook : SCALE OUT -> pending -> pending:wait -> pending:proceed -> Inservice
+--> while it is in a pending :wait state user can load or index data into the instance
+
+
+usually while termination an instance : SCALE IN -> terminating -> terminated
+by  using lifecycle hook : SCALE IN -> terminating ->terminating:wait -> terminating:proceed -> terminated
+-->while it is in a terminating :wait state user can backup data or logs from the instance
+
+instances change from 1 state to another when timeout expires (3600 s :default) or CompleteLifeAction command
+
+it can be integrated with sns or event bridge
+
+ASG HEALTH CHECKS:
+-->EC2(DEFAULT) , ELB(CAN BE ENABLED) AND CUSTOM
+-->ec2 - stoppong ,stopped , terminated ,shutting down or impared (not 2/2 status) = unhealthy
+
+-->ELB health checks can be more application aware(layer 7)
+--> custom - instances are marked healthy/unhealthy by an external system
+
+-->Health Check Grace Period: This is the amount of time, in seconds, that the Auto Scaling Group waits before it starts checking the health of newly launched instances.
+-->default : 300s i.e it waits 300s to start checking an instance which is newly launched
