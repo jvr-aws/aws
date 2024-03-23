@@ -1,0 +1,77 @@
+miscellaneious:
+
+1)AWS DataSync:
+AWS DataSync is a managed data transfer service provided by (AWS) that simplifies and accelerates the process of transferring data between on-premises storage systems(data centers) and AWS services, including Amazon S3, Amazon EFS, and Amazon FSx for Windows File Server.
+-->It is designed to securely and efficiently transfer large amounts of data over the internet or AWS Direct Connect connections
+
+***Key features of AWS DataSync include:
+-->easy setup
+-->Fast and Efficient Transfers:using multi-threading, and implementing bandwidth throttling
+-->Data Integrity and Encryption: in transit and at rest using SSL/TLS encryption protocols and AWS Key Management Service (KMS) encryption keys
+-->Support for Multiple Storage Service: s3,ebs,FSx(windows file server/share)
+-->Synchronization and Data Movement: supports both one-time data transfers and periodic data synchronization tasks
+-->Monitoring and Logging: can be integrated with cloud watch.
+-->over the internet .
+
+
+2)AWS Snowball 
+It is a petabyte-scale data transport service provided by Amazon Web Services (AWS). It helps customers transfer large amounts of data into and out of the AWS cloud in a cost-effective, secure, and efficient manner.
+
+*** It comes in two variants: Snowball and Snowball Edge.
+--> Snowball is used for data transfer only, 
+-->while Snowball Edge combines data transfer capabilities with on-board compute and storage for edge computing tasks.
+-->can be encrypted
+-->used for conditions where internet is unreliable
+
+3)AWS Snowball Edge
+It is a rugged, portable data transfer and edge computing device provided by Amazon Web Services (AWS). It is designed to address challenges associated with transferring large volumes of data to and from the cloud, particularly in environments where internet connectivity is limited or unreliable.
+-->storage (10 terabytes to pentabytes)
+--> suitable for use in remote or harsh environments where traditional data transfer methods may not be feasible
+-->They are equipped with powerful CPUs, GPUs, and FPGAs, enabling them to run applications and perform data processing tasks locally, without the need for a continuous internet connection.
+-->Snowball Edge seamlessly integrates with AWS services, such as Amazon S3, Amazon Glacier, AWS Snowball, and AWS Lambda.
+-->used for conditions where internet is unreliable
+
+
+4)Amazon GuardDuty
+Amazon GuardDuty is a threat detection service provided by Amazon Web Services (AWS) that continuously monitors your AWS environment for malicious activity and unauthorized behavior. 
+
+Key features of Amazon GuardDuty:
+-->Threat Detection:uses machine learning algorithms and threat intelligence feeds to analyze various data sources(AWS CloudTrail logs,
+Amazon VPC Flow Logs, and DNS logs) to detect and identify potential security threats 
+-->Intelligent Alerts
+-->Continuous Monitoring: countinuously monitors in realtime
+-->Integration with AWS Services
+-->Cost-Effective: GuardDuty is a fully managed service that does not require any upfront investment in infrastructure or software
+
+
+5)AWS Organizations:
+It is a service offered by Amazon Web Services (AWS) that helps you centrally manage and govern multiple AWS accounts within your organization.
+
+-->Organizational Units (OUs): With AWS Organizations, you can organize your accounts into hierarchical OUs to reflect your organization's structure. OUs help you apply policies and permissions at different levels of your organization, making it easier to manage permissions and enforce compliance requirements.
+
+-->Service Control Policies (SCPs): SCPs are policies that allow you to control which AWS services and features are accessible to accounts and OUs within your organization. SCPs are applied at the OU level and can be used to restrict access to specific services, enforce compliance requirements, and prevent users from bypassing organizational policies.
+
+-->Consolidated Billing: AWS Organizations provides consolidated billing, allowing you to aggregate the usage and costs of all accounts in your organization. 
+
+-->Policy-based Management: You can use AWS Organizations to create and enforce policies across your organization. Policies can be applied at the OU level and automatically inherited by all accounts and resources within the OU.
+
+Cross-Account Access: AWS Organizations enables you to establish trust relationships between accounts within your organization, allowing you to securely access and share resources across accounts. 
+
+Overall, AWS Organizations helps you streamline the management of multiple AWS accounts, enforce policies and compliance requirements, and optimize cost management across your organization's AWS environment. It provides centralized control and visibility, making it easier to scale your AWS infrastructure and operations effectively.
+
+
+6)AWS Control Tower 
+It is a service provided by Amazon Web Services (AWS) that helps organizations set up and govern a secure, multi-account AWS environment based on best practices and AWS recommended guidelines. It simplifies the process of setting up and managing a multi-account AWS environment 
+
+-->Guardrails: Control Tower enables you to define and enforce guardrails, which are predefined sets of policies and best practices that help ensure compliance and security across your AWS accounts.  Control Tower automatically applies guardrails to all accounts provisioned within the environment and continuously monitors compliance.
+
+-->AWS Account Factory: AWS Control Tower includes an Account Factory feature that streamlines the process of creating new AWS accounts. It provides customizable templates for creating new accounts with predefined configurations and security settings.
+
+
+
+
+
+
+
+
+
